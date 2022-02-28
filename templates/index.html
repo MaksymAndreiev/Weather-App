@@ -29,14 +29,112 @@
     {% if weather is defined %}
         {% for city in weather %}
         <div class="
-            {% if 6 <= city['time'] <= 10 %}
-                card evening-morning
-            {% elif 10 <= city['time'] <= 17 %}
-                card day
-            {% elif 17 <= city['time'] <= 21 %}
-                card evening-morning
-            {% else %}
-                card night
+            {% if (6 <= city['time'] <= 10) and (city['state'] == 'Ash') %}
+                card morning ash
+            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Clear') %}
+                card morning clear
+            {% elif (6 <= city['time'] <= 10) and (city['state'] in ['Clouds', 'Squall']) %}
+                {% if city['desc'] == 'few clouds' %}
+                    card morning evening-morning few
+                {% else %}
+                    card morning evening-morning-clouds
+                {% endif %}
+            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Drizzle') %}
+                card morning drizzle
+            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Dust') %}
+                card morning dust
+            {% elif (6 <= city['time'] <= 10) and (city['state'] in ['Fog', 'Mist', 'Haze']) %}
+                card morning fog
+            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Rain') %}
+                card morning evening-morning-rain
+            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Sand') %}
+                card morning sand
+            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Snow') %}
+                card morning-snow
+            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Smoke') %}
+                card morning smoke
+            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Tornado') %}
+                card morning tornado
+            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Thunderstorm') %}
+                card morning thunderstorm
+            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Ash') %}
+                card day ash
+            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Clear') %}
+                card day clear
+            {% elif (10 <= city['time'] <= 17) and (city['state'] in ['Clouds', 'Squall']) %}
+                {% if city['desc'] == 'few clouds' %}
+                    card day few
+                {% else %}
+                    card day day-clouds
+                {% endif %}
+            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Drizzle') %}
+                card day drizzle
+            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Dust') %}
+                card day dust
+            {% elif (10 <= city['time'] <= 17) and (city['state'] in ['Fog', 'Mist', 'Haze']) %}
+                card day fog
+            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Rain') %}
+                card day day-rain
+            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Snow') %}
+                card day day-snow
+            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Smoke') %}
+                card day smoke
+            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Tornado') %}
+                card day tornado
+            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Thunderstorm') %}
+                card day thunderstorm
+            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Ash') %}
+                card evening ash
+            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Clear') %}
+                card evening clear
+            {% elif (17 <= city['time'] <= 21) and (city['state'] in ['Clouds', 'Squall']) %}
+                {% if city['desc'] == 'few clouds' %}
+                    card evening few
+                {% else %}
+                    card evening evening-morning-clouds
+                {% endif %}
+            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Drizzle') %}
+                card evening drizzle
+            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Dust') %}
+                card evening dust
+            {% elif (17 <= city['time'] <= 21) and (city['state'] in ['Fog', 'Mist', 'Haze']) %}
+                card evening fog
+            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Rain') %}
+                card evening evening-morning-rain
+            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Snow') %}
+                card evening evening-morning-snow
+            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Smoke') %}
+                card evening smoke
+            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Tornado') %}
+                card evening tornado
+            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Thunderstorm') %}
+                card evening thunderstorm
+            {% elif city['state'] == 'Ash' %}
+                card night ash
+            {% elif city['state'] == 'Clear' %}
+                card night clear
+            {% elif city['state'] in ['Clouds', 'Squall'] %}
+                {% if city['desc'] == 'few clouds' %}
+                    card night night-few
+                {% else %}
+                    card night night-clouds
+                {% endif %}
+            {% elif city['state'] == 'Drizzle' %}
+                card night drizzle
+            {% elif city['state'] == 'Dust' %}
+                card night dust
+            {% elif (city['state'] in ['Fog', 'Mist', 'Haze']) %}
+                card night fog
+            {% elif city['state'] == 'Rain' %}
+                card night night-rain
+            {% elif city['state'] == 'Snow' %}
+                card night night-snow
+            {% elif city['state'] == 'Smoke' %}
+                card night smoke
+            {% elif city['state'] == 'Tornado' %}
+                card night tornado
+            {% elif city['state'] == 'Thunderstorm' %}
+                card night thunderstorm
             {% endif %}"
         >
             <div class="delete-wrapper">

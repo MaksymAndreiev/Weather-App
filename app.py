@@ -36,9 +36,10 @@ def index():
         dict_with_weather_info = {
             "name": json.loads(data.content)["name"],
             "state": {k: v for e in json.loads(data.content)["weather"] for (k, v) in e.items()}.get("main"),
+            "desc": {k: v for e in json.loads(data.content)["weather"] for (k, v) in e.items()}.get("description"),
             "temp": int(json.loads(data.content)["main"].get("temp") - 273.15),
             "time": get_date(json.loads(data.content)['timezone']),
-            "id": f"{city.id}"
+            "id": f"{city.id}",
         }
         weather.append(dict_with_weather_info)
     return render_template('index.html', weather=weather)

@@ -1,154 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Weather App</title>
-    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/64/3845/3845731.png" type="image/x-icon"/>
-    <link rel="stylesheet"
-          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-          crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
-<div class="form">
-    {% with message = get_flashed_messages() %}
-    {% if message %}
-    <div class="alert alert-primary" role="alert">
-        {{message[0]}}
-    </div>
-    {% endif %}
-    {% endwith %}
-    <form action="/add" method="POST">
-        <input type="text" placeholder="Enter a city name" name="city_name" id="input-city">
-        <button type="submit" class="submit-button">Add</button>
-    </form>
-</div>
-<div class="cards">
-    {% if weather is defined %}
-        {% for city in weather %}
-        <div class="
-            {% if (6 <= city['time'] <= 10) and (city['state'] == 'Ash') %}
-                card morning ash
-            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Clear') %}
-                card morning clear
-            {% elif (6 <= city['time'] <= 10) and (city['state'] in ['Clouds', 'Squall']) %}
-                {% if city['desc'] == 'few clouds' %}
-                    card morning evening-morning few
-                {% else %}
-                    card morning evening-morning-clouds
-                {% endif %}
-            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Drizzle') %}
-                card morning drizzle
-            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Dust') %}
-                card morning dust
-            {% elif (6 <= city['time'] <= 10) and (city['state'] in ['Fog', 'Mist', 'Haze']) %}
-                card morning fog
-            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Rain') %}
-                card morning evening-morning-rain
-            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Sand') %}
-                card morning sand
-            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Snow') %}
-                card morning-snow
-            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Smoke') %}
-                card morning smoke
-            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Tornado') %}
-                card morning tornado
-            {% elif (6 <= city['time'] <= 10) and (city['state'] == 'Thunderstorm') %}
-                card morning thunderstorm
-            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Ash') %}
-                card day ash
-            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Clear') %}
-                card day clear
-            {% elif (10 <= city['time'] <= 17) and (city['state'] in ['Clouds', 'Squall']) %}
-                {% if city['desc'] == 'few clouds' %}
-                    card day few
-                {% else %}
-                    card day day-clouds
-                {% endif %}
-            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Drizzle') %}
-                card day drizzle
-            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Dust') %}
-                card day dust
-            {% elif (10 <= city['time'] <= 17) and (city['state'] in ['Fog', 'Mist', 'Haze']) %}
-                card day fog
-            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Rain') %}
-                card day day-rain
-            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Snow') %}
-                card day day-snow
-            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Smoke') %}
-                card day smoke
-            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Tornado') %}
-                card day tornado
-            {% elif (10 <= city['time'] <= 17) and (city['state'] == 'Thunderstorm') %}
-                card day thunderstorm
-            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Ash') %}
-                card evening ash
-            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Clear') %}
-                card evening clear
-            {% elif (17 <= city['time'] <= 21) and (city['state'] in ['Clouds', 'Squall']) %}
-                {% if city['desc'] == 'few clouds' %}
-                    card evening few
-                {% else %}
-                    card evening evening-morning-clouds
-                {% endif %}
-            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Drizzle') %}
-                card evening drizzle
-            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Dust') %}
-                card evening dust
-            {% elif (17 <= city['time'] <= 21) and (city['state'] in ['Fog', 'Mist', 'Haze']) %}
-                card evening fog
-            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Rain') %}
-                card evening evening-morning-rain
-            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Snow') %}
-                card evening evening-morning-snow
-            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Smoke') %}
-                card evening smoke
-            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Tornado') %}
-                card evening tornado
-            {% elif (17 <= city['time'] <= 21) and (city['state'] == 'Thunderstorm') %}
-                card evening thunderstorm
-            {% elif city['state'] == 'Ash' %}
-                card night ash
-            {% elif city['state'] == 'Clear' %}
-                card night clear
-            {% elif city['state'] in ['Clouds', 'Squall'] %}
-                {% if city['desc'] == 'few clouds' %}
-                    card night night-few
-                {% else %}
-                    card night night-clouds
-                {% endif %}
-            {% elif city['state'] == 'Drizzle' %}
-                card night drizzle
-            {% elif city['state'] == 'Dust' %}
-                card night dust
-            {% elif (city['state'] in ['Fog', 'Mist', 'Haze']) %}
-                card night fog
-            {% elif city['state'] == 'Rain' %}
-                card night night-rain
-            {% elif city['state'] == 'Snow' %}
-                card night night-snow
-            {% elif city['state'] == 'Smoke' %}
-                card night smoke
-            {% elif city['state'] == 'Tornado' %}
-                card night tornado
-            {% elif city['state'] == 'Thunderstorm' %}
-                card night thunderstorm
-            {% endif %}"
-        >
-            <div class="delete-wrapper">
-                <form action="/delete/{{city.id}}" method="POST">
-                    <input type="hidden" name="id" value="{{city.id}}}">
-                    <button class="delete-button" type="submit">&#10006;</button>
-                </form>
+    <head>
+        <meta charset="UTF-8">
+        <title>Weather App</title>
+        <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/64/3845/3845731.png" type="image/x-icon"/>
+        <link rel="stylesheet"
+              href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+              integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+              crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <div class="form">
+            {% with message = get_flashed_messages() %}
+            {% if message %}
+            <div class="alert alert-primary" role="alert">
+                {{message[0]}}
             </div>
-            <div class="degrees"><span> {{city.temp}} <span class="celsius"> °C</span></span></div>
-            <div class="state">{{city.state}}</div>
-            <div class="city">{{city.name}}</div>
+            {% endif %}
+            {% endwith %}
+            <form action="/add" method="POST">
+                <input type="text" placeholder="Enter a city name" name="city_name" id="input-city">
+                <button type="submit" class="submit-button">Add</button>
+            </form>
         </div>
-        {% endfor %}
-    {% endif %}
-</div>
-</body>
+        <div class="cards">
+            {% if weather is defined %}
+                {% for city in weather %}
+                <div class="
+                    {% if (6 <= city['time'] <= 10) %}
+                        card morning
+                    {% elif (10 < city['time'] < 17) %}
+                        card day
+                    {% elif (17 <= city['time'] <= 21) %}
+                        card evening
+                    {% else %}
+                        card night
+                    {% endif %}"
+                >
+                    <div class="delete-wrapper">
+                        <form action="/delete/{{city.id}}" method="POST">
+                            <input type="hidden" name="id" value="{{city.id}}}">
+                            <button class="delete-button" type="submit">&#10006;</button>
+                        </form>
+                    </div>
+                    <div class="degrees"><span> {{city.temp}} <span class="celsius"> °C</span></span></div>
+                    <div class="state">{{city.state}}</div>
+                    {% if  city['state'] == 'Ash' %}
+                        <img src="/static/img/ash.svg" alt="">
+                    {% elif city['state'] == 'Clear' %}
+                        {% if (6 <= city['time'] <= 21) %}
+                            <img src="/static/img/clear.svg" alt="">
+                        {% else %}
+                            <img src="/static/img/night/clear.svg" alt="">
+                        {% endif %}
+                    {% elif city['state'] in ['Clouds', 'Squall'] %}
+                        {% if city['desc'] == 'few clouds' %}
+                            {% if (6 <= city['time'] <= 21) %}
+                                <img src="/static/img/few-clouds.svg" alt="">
+                            {% else %}
+                                <img src="/static/img/night/few-clouds.svg" alt="">
+                            {% endif %}
+                        {% else %}
+                            {% if (6 <= city['time'] <= 10) or (17 <= city['time'] <= 21) %}
+                                <img src="/static/img/evening-morning/clouds.svg" alt="">
+                            {% elif (10 < city['time'] < 17) %}
+                                <img src="/static/img/day/clouds.svg" alt="">
+                            {% else %}
+                                <img src="/static/img/night/clouds.svg" alt="">
+                            {% endif %}
+                        {% endif %}
+                    {% elif city['state'] == 'Drizzle' %}
+                        <img src="/static/img/drizzle.svg" alt="">
+                    {% elif city['state'] == 'Dust' %}
+                        <img src="/static/img/dust.svg" alt="">
+                    {% elif (city['state'] in ['Fog', 'Mist', 'Haze']) %}
+                        <img src="/static/img/mist.svg" alt="">
+                    {% elif city['state'] == 'Rain' %}
+                        {% if (6 <= city['time'] <= 10) or (17 <= city['time'] <= 21) %}
+                            <img src="/static/img/evening-morning/rain.svg" alt="">
+                        {% elif (10 < city['time'] < 17) %}
+                            <img src="/static/img/day/rain.svg" alt="">
+                        {% else %}
+                            <img src="/static/img/night/rain.svg" alt="">
+                        {% endif %}
+                    {% elif city['state'] == 'Snow' %}
+                        {% if (6 <= city['time'] <= 10) or (17 <= city['time'] <= 21) %}
+                            <img src="/static/img/evening-morning/snow.svg" alt="">
+                        {% elif (10 < city['time'] < 17) %}
+                            <img src="/static/img/day/snow.svg" alt="">
+                        {% else %}
+                            <img src="/static/img/night/snow.svg" alt="">
+                        {% endif %}
+                    {% elif city['state'] == 'Smoke' %}
+                        <img src="/static/img/smoke.svg" alt="">
+                    {% elif city['state'] == 'Tornado' %}
+                        <img src="/static/img/tornado.svg" alt="">
+                    {% elif city['state'] == 'Thunderstorm' %}
+                        <img src="/static/img/thunderstorm.svg" alt="">
+                    {% endif %}
+                    <div class="city">{{city.name}}</div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </body>
 </html>

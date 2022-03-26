@@ -6,6 +6,12 @@ import requests
 import json
 import datetime
 
+# import jinja2
+#
+# loader = jinja2.FileSystemLoader('/tmp')
+# env = jinja2.Environment(autoescape=True, loader=loader)
+# env.filters['all'] = all
+
 app = Flask(__name__)
 # db = create_engine('sqlite:///weather.db?check_same_thread=False')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///weather.db'
@@ -23,22 +29,45 @@ class City(db.Model):
 db.create_all()
 
 
+@app.template_filter('positive')
+def positive(arr):
+    return all(val >= 0 for val in arr)
+
+
 @app.route('/')
 def index():
     def get_date(timezone):
         tz = datetime.timezone(datetime.timedelta(seconds=int(timezone)))
-        return datetime.datetime.now(tz=tz).time().hour
+        day = datetime.datetime.now(tz=tz).date().strftime("%a, %d %b")
+        time = datetime.datetime.now(tz=tz).time().strftime("%H:%M")
+        hour = datetime.datetime.now(tz=tz).time().hour
+        return hour, time, day
+
     weather = []
     cities = City.query.all()
     for city in cities:
         city_name = city.name
-        data = requests.get(f'http://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}')
+        # units in api
+        data = requests.get(f'http://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}&units=metric')
+        lat = json.loads(data.content)["coord"].get("lat")
+        lon = json.loads(data.content)["coord"].get("lon")
+        data_forecast = requests.get(
+            f'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,hourly,'
+            f'alerts&appid={api_key}&units=metric')
+        days_weather = list(json.loads(data_forecast.content)["daily"][i].get("temp").get("day") for i in range(7))
+        days_name = []
         dict_with_weather_info = {
             "name": json.loads(data.content)["name"],
             "state": {k: v for e in json.loads(data.content)["weather"] for (k, v) in e.items()}.get("main"),
             "desc": {k: v for e in json.loads(data.content)["weather"] for (k, v) in e.items()}.get("description"),
-            "temp": int(json.loads(data.content)["main"].get("temp") - 273.15),
-            "time": get_date(json.loads(data.content)['timezone']),
+            "temp": int(json.loads(data.content)["main"].get("temp")),
+            "wind": int(json.loads(data.content)["wind"].get("speed")),
+            "pressure": json.loads(data.content)["main"].get("pressure"),
+            "humidity": json.loads(data.content)["main"].get("humidity"),
+            "time": get_date(json.loads(data.content)['timezone'])[0],
+            "curTime": get_date(json.loads(data.content)['timezone'])[1],
+            "date": get_date(json.loads(data.content)['timezone'])[2],
+            "days": days_weather,
             "id": f"{city.id}",
         }
         weather.append(dict_with_weather_info)

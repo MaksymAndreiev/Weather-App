@@ -1,109 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Weather App</title>
-        <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/64/3845/3845731.png" type="image/x-icon"/>
-        <link rel="stylesheet"
-              href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-              integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
-              crossorigin="anonymous">
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    </head>
-    <body>
-        <div class="form">
-            {% with message = get_flashed_messages() %}
-            {% if message %}
+<head>
+    <meta charset="UTF-8">
+    {#        <meta http-equiv="refresh" content="60" >#}
+    <title>Weather App</title>
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/64/3845/3845731.png" type="image/x-icon"/>
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+          crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/charts.css/dist/charts.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body oncontextmenu="return false">
+<div class="form">
+    {% with message = get_flashed_messages() %}
+        {% if message %}
             <div class="alert alert-primary" role="alert">
-                {{message[0]}}
+                {{ message[0] }}
             </div>
-            {% endif %}
-            {% endwith %}
-            <form action="/add" method="POST">
-                <input type="text" placeholder="Enter a city name" name="city_name" id="input-city">
-                <button type="submit" class="submit-button">Add</button>
-            </form>
-        </div>
-        <div class="cards">
-            {% if weather is defined %}
-                {% for city in weather %}
-                <div class="
-                    {% if (6 <= city['time'] <= 10) %}
-                        card morning
-                    {% elif (10 < city['time'] < 17) %}
-                        card day
-                    {% elif (17 <= city['time'] <= 21) %}
-                        card evening
-                    {% else %}
-                        card night
-                    {% endif %}"
-                >
+        {% endif %}
+    {% endwith %}
+    <form action="/add" method="POST">
+        <input type="text" placeholder="Enter a city name" name="city_name" id="input-city">
+        <button type="submit" class="submit-button">Add</button>
+    </form>
+</div>
+<div class="cards">
+    {% if weather is defined %}
+        {% for city in weather %}
+            <div class="
+                        {% if (6 <= city['time'] <= 10) %}
+                            card morning
+                        {% elif (10 < city['time'] < 17) %}
+                            card day
+                        {% elif (17 <= city['time'] <= 21) %}
+                            card evening
+                        {% else %}
+                            card night
+                        {% endif %}"
+            >
+                <div class="inner-card">
                     <div class="delete-wrapper">
-                        <form action="/delete/{{city.id}}" method="POST">
-                            <input type="hidden" name="id" value="{{city.id}}}">
+                        <form action="/delete/{{ city.id }}" method="POST">
+                            <input type="hidden" name="id" value="{{ city.id }}}">
                             <button class="delete-button" type="submit">&#10006;</button>
                         </form>
                     </div>
-                    <div class="degrees"><span> {{city.temp}} <span class="celsius"> °C</span></span></div>
-                    <div class="state">{{city.state}}</div>
-                    {% if  city['state'] == 'Ash' %}
-                        <img src="/static/img/ash.svg" alt="">
-                    {% elif city['state'] == 'Clear' %}
-                        {% if (6 <= city['time'] <= 21) %}
-                            <img src="/static/img/clear.svg" alt="">
-                        {% else %}
-                            <img src="/static/img/night/clear.svg" alt="">
-                        {% endif %}
-                    {% elif city['state'] in ['Clouds', 'Squall'] %}
-                        {% if city['desc'] == 'few clouds' %}
+                    <div class="front">
+                        <div class="city">{{ city.name }}</div>
+                        <div class="date">{{ city.date }}</div>
+                        <div class="degrees"><span> {{ city.temp }} <span class="celsius"> °C</span></span></div>
+                        {% if  city['state'] == 'Ash' %}
+                            <img src="/static/img/ash.png" alt="">
+                        {% elif city['state'] == 'Clear' %}
                             {% if (6 <= city['time'] <= 21) %}
-                                <img src="/static/img/few-clouds.svg" alt="">
+                                <img src="/static/img/clear.svg" alt="">
                             {% else %}
-                                <img src="/static/img/night/few-clouds.svg" alt="">
+                                <img src="/static/img/night/clear.svg" alt="">
                             {% endif %}
-                        {% else %}
+                        {% elif city['state'] in ['Clouds', 'Squall'] %}
+                            {% if city['desc'] == 'few clouds' %}
+                                {% if (6 <= city['time'] <= 21) %}
+                                    <img src="/static/img/few-clouds.svg" alt="">
+                                {% else %}
+                                    <img src="/static/img/night/few-clouds.svg" alt="">
+                                {% endif %}
+                            {% else %}
+                                {% if (6 <= city['time'] <= 10) or (17 <= city['time'] <= 21) %}
+                                    <img src="/static/img/evening-morning/clouds.svg" alt="">
+                                {% elif (10 < city['time'] < 17) %}
+                                    <img src="/static/img/day/clouds.svg" alt="">
+                                {% else %}
+                                    <img src="/static/img/night/clouds.svg" alt="">
+                                {% endif %}
+                            {% endif %}
+                        {% elif city['state'] == 'Drizzle' %}
+                            <img src="/static/img/drizzle.svg" alt="">
+                        {% elif city['state'] == 'Dust' %}
+                            <img src="/static/img/dust.svg" alt="">
+                        {% elif (city['state'] in ['Fog', 'Mist', 'Haze']) %}
+                            <img src="/static/img/mist.svg" alt="">
+                        {% elif city['state'] == 'Rain' %}
                             {% if (6 <= city['time'] <= 10) or (17 <= city['time'] <= 21) %}
-                                <img src="/static/img/evening-morning/clouds.svg" alt="">
+                                <img src="/static/img/evening-morning/rain.svg" alt="">
                             {% elif (10 < city['time'] < 17) %}
-                                <img src="/static/img/day/clouds.svg" alt="">
+                                <img src="/static/img/day/rain.svg" alt="">
                             {% else %}
-                                <img src="/static/img/night/clouds.svg" alt="">
+                                <img src="/static/img/night/rain.svg" alt="">
                             {% endif %}
+                        {% elif city['state'] == 'Sand' %}
+                            <img src="/static/img/sand.png" alt="">
+                        {% elif city['state'] == 'Snow' %}
+                            {% if (6 <= city['time'] <= 10) or (17 <= city['time'] <= 21) %}
+                                <img src="/static/img/evening-morning/snow.svg" alt="">
+                            {% elif (10 < city['time'] < 17) %}
+                                <img src="/static/img/day/snow.svg" alt="">
+                            {% else %}
+                                <img src="/static/img/night/snow.svg" alt="">
+                            {% endif %}
+                        {% elif city['state'] == 'Smoke' %}
+                            <img src="/static/img/smoke.png" alt="">
+                        {% elif city['state'] == 'Tornado' %}
+                            <img src="/static/img/tornado.svg" alt="">
+                        {% elif city['state'] == 'Thunderstorm' %}
+                            <img src="/static/img/thunderstorm.svg" alt="">
                         {% endif %}
-                    {% elif city['state'] == 'Drizzle' %}
-                        <img src="/static/img/drizzle.svg" alt="">
-                    {% elif city['state'] == 'Dust' %}
-                        <img src="/static/img/dust.svg" alt="">
-                    {% elif (city['state'] in ['Fog', 'Mist', 'Haze']) %}
-                        <img src="/static/img/mist.svg" alt="">
-                    {% elif city['state'] == 'Rain' %}
-                        {% if (6 <= city['time'] <= 10) or (17 <= city['time'] <= 21) %}
-                            <img src="/static/img/evening-morning/rain.svg" alt="">
-                        {% elif (10 < city['time'] < 17) %}
-                            <img src="/static/img/day/rain.svg" alt="">
+                        <div class="state">{{ city.state }}</div>
+                        <div class="time">{{ city.curTime }}</div>
+                    </div>
+                    <div class="back">
+                        <div class="info">
+                            <img src="/static/img/wind.svg" alt="">
+                            <img src="/static/img/humidity.svg" alt="">
+                            <img src="/static/img/pressure.svg" alt="">
+                            <div class="wind">
+                                {{ city.wind }} m/s
+                            </div>
+                            <div class="humidity">
+                                {{ city.humidity }} %
+                            </div>
+                            <div class="pressure">
+                                {{ city.pressure }}
+                            </div>
+                        </div>
+                        {% if city.days | positive %}
+                        <table class="charts-css column show-heading" id="chart">
+                            <caption>7 days forecast</caption>
+                            <tbody>
+                            {% for day in city.days %}
+                            <tr>
+                                <td style="--size:{{ day/50 }}">
+                                    <span class="data">{{ day }}°C</span>
+                                    <span class="tooltip"></span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
                         {% else %}
-                            <img src="/static/img/night/rain.svg" alt="">
+                            <table class="charts-css column show-heading" id="chart">
+                            <caption>7 days forecast</caption>
+                            <tbody>
+                            {% for day in city.days %}
+                            <tr>
+                                <td style="--size:{{ (day + 40)/50 }}">
+                                    <span class="data">{{ day }}°C</span>
+                                    <span class="tooltip"></span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                            </table>
                         {% endif %}
-                    {% elif city['state'] == 'Snow' %}
-                        {% if (6 <= city['time'] <= 10) or (17 <= city['time'] <= 21) %}
-                            <img src="/static/img/evening-morning/snow.svg" alt="">
-                        {% elif (10 < city['time'] < 17) %}
-                            <img src="/static/img/day/snow.svg" alt="">
-                        {% else %}
-                            <img src="/static/img/night/snow.svg" alt="">
-                        {% endif %}
-                    {% elif city['state'] == 'Smoke' %}
-                        <img src="/static/img/smoke.svg" alt="">
-                    {% elif city['state'] == 'Tornado' %}
-                        <img src="/static/img/tornado.svg" alt="">
-                    {% elif city['state'] == 'Thunderstorm' %}
-                        <img src="/static/img/thunderstorm.svg" alt="">
-                    {% endif %}
-                    <div class="city">{{city.name}}</div>
+                    </div>
                 </div>
-                {% endfor %}
-            {% endif %}
-        </div>
-    </body>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+</body>
 </html>

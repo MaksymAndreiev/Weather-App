@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    {#        <meta http-equiv="refresh" content="60" >#}
+    <meta http-equiv="refresh" content="60">
     <title>Weather App</title>
-    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/64/3845/3845731.png" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/weather-app.png') }}" type="image/x-icon"/>
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
           integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
@@ -42,13 +42,13 @@
                         {% endif %}"
             >
                 <div class="inner-card">
-                    <div class="delete-wrapper">
-                        <form action="/delete/{{ city.id }}" method="POST">
-                            <input type="hidden" name="id" value="{{ city.id }}}">
-                            <button class="delete-button" type="submit">&#10006;</button>
-                        </form>
-                    </div>
                     <div class="front">
+                        <div class="delete-wrapper">
+                            <form action="/delete/{{ city.id }}" method="POST">
+                                <input type="hidden" name="id" value="{{ city.id }}}">
+                                <button class="delete-button" type="submit">&#10006;</button>
+                            </form>
+                        </div>
                         <div class="city">{{ city.name }}</div>
                         <div class="date">{{ city.date }}</div>
                         <div class="degrees"><span> {{ city.temp }} <span class="celsius"> °C</span></span></div>
@@ -111,49 +111,51 @@
                         <div class="time">{{ city.curTime }}</div>
                     </div>
                     <div class="back">
+                        <div class="delete-wrapper">
+                            <form action="/delete/{{ city.id }}" method="POST">
+                                <input type="hidden" name="id" value="{{ city.id }}}">
+                                <button class="delete-button" type="submit">&#10006;</button>
+                            </form>
+                        </div>
                         <div class="info">
                             <img src="/static/img/wind.svg" alt="">
                             <img src="/static/img/humidity.svg" alt="">
                             <img src="/static/img/pressure.svg" alt="">
-                            <div class="wind">
-                                {{ city.wind }} m/s
-                            </div>
-                            <div class="humidity">
-                                {{ city.humidity }} %
-                            </div>
-                            <div class="pressure">
-                                {{ city.pressure }}
-                            </div>
+                            <img src="/static/img/precipitation.svg" alt="">
+                            <div class="wind"> {{ city.wind }} m/s</div>
+                            <div class="humidity"> {{ city.humidity }} %</div>
+                            <div class="pressure"> {{ city.pressure }} </div>
+                            <div class="precipitation"> {{ city.precipitation }} %</div>
                         </div>
-                        {% if city.days | positive %}
-                        <table class="charts-css column show-heading" id="chart">
+                        <table class="charts-css column show-heading show-labels" id="chart">
                             <caption>7 days forecast</caption>
                             <tbody>
                             {% for day in city.days %}
-                            <tr>
-                                <td style="--size:{{ day/50 }}">
+                                {% set name = city.names[loop.index - 1] %}
+                                {% set d_temp = city.tooltip[0][loop.index - 1] %}
+                                {% set n_temp = city.tooltip[1][loop.index - 1] %}
+                                {% set d_feel = city.tooltip[2][loop.index - 1] %}
+                                {% set n_feel = city.tooltip[3][loop.index - 1] %}
+                                <tr>
+                                    <th scope="row"> {{ name }} </th>
+                                    {% if city.days | positive %}
+                                        <td style="--size:{{ day/50 }}">
+                                            {% else %}
+                                            {% set min_temp = city.days | min %}
+                                        <td style="--size:{{ (day + (min_temp * (-1) + 5))/50 }}">
+                                    {% endif %}
                                     <span class="data">{{ day }}°C</span>
-                                    <span class="tooltip"></span>
-                                </td>
-                            </tr>
+                                    <span class="tooltip">
+                                                Day: {{ d_temp }}°C <br>
+                                                Night: {{ n_temp }}°C <br>
+                                                Feels like (day): {{ d_feel }}°C <br>
+                                                Feels like (night): {{ n_feel }}°C
+                                            </span>
+                                    </td>
+                                </tr>
                             {% endfor %}
                             </tbody>
                         </table>
-                        {% else %}
-                            <table class="charts-css column show-heading" id="chart">
-                            <caption>7 days forecast</caption>
-                            <tbody>
-                            {% for day in city.days %}
-                            <tr>
-                                <td style="--size:{{ (day + 40)/50 }}">
-                                    <span class="data">{{ day }}°C</span>
-                                    <span class="tooltip"></span>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                            </table>
-                        {% endif %}
                     </div>
                 </div>
             </div>

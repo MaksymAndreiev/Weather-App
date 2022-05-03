@@ -14,10 +14,7 @@ api_key = ['80d2dcec03133dc269c9a17fea6df313', 'be239b2e9342bb6379f7f5a1a1f81a71
 app.secret_key = 'secret_key'
 
 
-class City(db.Model):
-    __tablename__ = 'city'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200), unique=True, nullable=False)
+
 
 
 db.create_all()
@@ -101,32 +98,7 @@ def index():
     return render_template('index.html', weather=weather)
 
 
-@app.route('/add', methods=['GET', 'POST'])
-def add_city():
-    city_name = request.form.get('city_name')
-    response = requests.get(f'http://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}')
-    if response.status_code == 404:
-        flash("The city doesn't exist!")
-        return redirect('/')
-    cities = City.query.all()
-    for city in cities:
-        if city.name == city_name:
-            flash("The city has already been added to the list!")
-            return redirect('/')
-    else:
-        city = City(name=city_name)
-        db.session.add(city)
-        db.session.commit()
 
-        return redirect('/')
-
-
-@app.route('/delete/<city_id>', methods=['GET', 'POST'])
-def delete(city_id):
-    city = City.query.filter_by(id=city_id).first()
-    db.session.delete(city)
-    db.session.commit()
-    return redirect('/')
 
 
 # don't change the following way to run flask:

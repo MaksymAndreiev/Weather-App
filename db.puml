@@ -1,0 +1,56 @@
+@startuml
+'https://plantuml.com/object-diagram
+
+object City {
+    id
+    name
+    longitude
+    latitude
+    country_id
+}
+
+object Country {
+    id
+    name
+}
+
+object weather_status {
+    id
+    status
+    description
+}
+
+object hourly_forecast{
+    id
+    city_id
+    weather_status_id
+    temperature
+    wind_speed
+    pressure
+    humidity
+    precipitation
+}
+
+object daily_forecast{
+    id
+    city_id
+    date
+    weather_status_id
+    day_temperature
+    night_temperature
+    feels_like_day
+    feels_like_night
+    wind_speed
+    pressure
+    humidity
+    precipitation
+}
+
+Country::id -> City::c
+City::id ---> hourly_forecast::city_id
+City::id ---> daily_forecast::city_id
+weather_status::id --> hourly_forecast::weather_status_id
+weather_status::id --> daily_forecast::weather_status_id
+
+
+@enduml

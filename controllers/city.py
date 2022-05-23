@@ -15,7 +15,7 @@ def get_all_cities():
 
 def add_city():
     city_name = request.form.get('city_name')
-    response = requests.get(f'http://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}')
+    response = requests.get(f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key[0]}')
     if response.status_code == 404:
         flash("The city doesn't exist!")
         return redirect('/')
@@ -25,7 +25,7 @@ def add_city():
             flash("The city has already been added to the list!")
             return redirect('/')
     else:
-        City().create(name=city_name)
+        City.create(name=city_name)
         return redirect('/')
 
 

@@ -20,7 +20,6 @@ class Model(object):
         cls: class
         kwargs: dict with object parameters
         """
-        print('yes')
         obj = cls(**kwargs)
         return commit(obj)
 

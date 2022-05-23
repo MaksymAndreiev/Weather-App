@@ -2,5 +2,5 @@ https://github.com/hyperskill/hs-test-python/archive/release.tar.gz
 Flask~=1.1.2
 requests~=2.27.1
 flask-sqlalchemy
-markupsafe = 2.0.1
+markupsafe == 2.0.1
 Jinja2~=2.11.3

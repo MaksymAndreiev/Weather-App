@@ -29,12 +29,15 @@ object hourly_forecast{
     pressure
     humidity
     precipitation
+    time
+    current_time
+    date
 }
 
 object daily_forecast{
     id
     city_id
-    date
+    day_name
     weather_status_id
     day_temperature
     night_temperature

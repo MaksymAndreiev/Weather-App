@@ -1,7 +1,7 @@
 import json
 
 import requests
-from flask import Flask, request, render_template
+from flask import render_template
 from flask import current_app as app
 import datetime
 

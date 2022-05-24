@@ -37,15 +37,13 @@ object hourly_forecast{
 object daily_forecast{
     id
     city_id
+    day_id
     day_name
     weather_status_id
     day_temperature
     night_temperature
     feels_like_day
     feels_like_night
-    wind_speed
-    pressure
-    humidity
     precipitation
 }
 

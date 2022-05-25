@@ -1,7 +1,11 @@
 import requests
 from flask import request, redirect, flash
 
+from controllers.parse_request import city_data, hourly_data, daily_data, weather_data
 from models.City import City
+from models.DailyForecast import DailyForecast
+from models.HourlyForecast import HourlyForecast
+from models.WeatherStatus import WeatherStatus
 from settings.constants import api_key
 
 
@@ -25,7 +29,13 @@ def add_city():
             flash("The city has already been added to the list!")
             return redirect('/')
     else:
-        City.create(name=city_name)
+        data = city_data(city_name)
+        City.create(**data)
+        h_data = hourly_data(city_name)
+        HourlyForecast.create(**h_data)
+        for i in range(0, 7):
+            d_data = daily_data(city_name, i)
+            DailyForecast.create(**d_data)
         return redirect('/')
 
 

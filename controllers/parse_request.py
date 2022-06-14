@@ -10,13 +10,17 @@ from models.WeatherStatus import WeatherStatus
 from settings.constants import api_key
 
 global DATA, FORECAST
+WEATHER_DATA = None
 
 
 def weather_id_det(state):
     weather = WeatherStatus.query.filter_by(status=state).first()
     if weather is None:
+        global WEATHER_DATA
         w_data = weather_data()
-        WeatherStatus.create(**w_data)
+        if WEATHER_DATA != w_data or WEATHER_DATA == None:
+            WEATHER_DATA = w_data
+        WeatherStatus.create(**WEATHER_DATA)
         weather = WeatherStatus.query.filter_by(status=state).first()
         w_id = weather.id
     else:
@@ -49,6 +53,7 @@ def get_forecast_data(city_name):
         data_forecast = requests.get(
             f'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,hourly,'
             f'alerts&appid={api_key[0]}&units=metric')
+        data_forecast.raise_for_status()  # returns an HTTPError object if an error has occurred
     except ConnectionError:
         data_forecast = requests.get(
             f'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,hourly,'

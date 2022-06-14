@@ -122,6 +122,11 @@ def daily_data(city_name, day_number):
 
 
 def weather_data(i):
-    state = {k: v for e in json.loads(FORECAST.content)["daily"][i]["weather"] for (k, v) in e.items()}.get("main")
-    desc = {k: v for e in json.loads(FORECAST.content)["daily"][i]["weather"] for (k, v) in e.items()}.get("description")
+    if i == 0:
+        state = {k: v for e in json.loads(DATA.content)["weather"] for (k, v) in e.items()}.get("main")
+        desc = {k: v for e in json.loads(DATA.content)["weather"] for (k, v) in e.items()}.get("description")
+    else:
+        state = {k: v for e in json.loads(FORECAST.content)["daily"][i]["weather"] for (k, v) in e.items()}.get("main")
+        desc = {k: v for e in json.loads(FORECAST.content)["daily"][i]["weather"] for (k, v) in e.items()}.get(
+        "description")
     return {'status': state, 'description': desc}

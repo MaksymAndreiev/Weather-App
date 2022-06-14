@@ -10,17 +10,13 @@ from models.WeatherStatus import WeatherStatus
 from settings.constants import api_key
 
 global DATA, FORECAST
-WEATHER_DATA = None
 
 
-def weather_id_det(state):
+def weather_id_det(state, i):
     weather = WeatherStatus.query.filter_by(status=state).first()
     if weather is None:
-        global WEATHER_DATA
-        w_data = weather_data()
-        if WEATHER_DATA != w_data or WEATHER_DATA == None:
-            WEATHER_DATA = w_data
-        WeatherStatus.create(**WEATHER_DATA)
+        w_data = weather_data(i)
+        WeatherStatus.create(**w_data)
         weather = WeatherStatus.query.filter_by(status=state).first()
         w_id = weather.id
     else:
@@ -88,7 +84,7 @@ def hourly_data(city_name):
     city = City.query.filter_by(name=city_name).first()
     city_id = city.id
     state = {k: v for e in json.loads(DATA.content)["weather"] for (k, v) in e.items()}.get("main")
-    w_id = weather_id_det(state)
+    w_id = weather_id_det(state, 0)
     temp = int(json.loads(DATA.content)["main"].get("temp"))
     wind = int(json.loads(DATA.content)["wind"].get("speed"))
     pressure = json.loads(DATA.content)["main"].get("pressure")
@@ -114,7 +110,7 @@ def daily_data(city_name, day_number):
     day_id = i
     day_name = get_date_name(json.loads(FORECAST.content)["daily"][i].get('dt'))
     state = {k: v for e in json.loads(FORECAST.content)["daily"][i]["weather"] for (k, v) in e.items()}.get("main")
-    w_id = weather_id_det(state)
+    w_id = weather_id_det(state, i)
     day_temperature = int(json.loads(FORECAST.content)["daily"][i].get("temp").get("day"))
     night_temperature = int(json.loads(FORECAST.content)["daily"][i].get("temp").get("night"))
     feels_like_day = int(json.loads(FORECAST.content)["daily"][i].get("feels_like").get("day"))
@@ -125,7 +121,7 @@ def daily_data(city_name, day_number):
             'feels_like_day': feels_like_day, 'feels_like_night': feels_like_night, 'precipitation': precipitation}
 
 
-def weather_data():
-    state = {k: v for e in json.loads(DATA.content)["weather"] for (k, v) in e.items()}.get("main")
-    desc = {k: v for e in json.loads(DATA.content)["weather"] for (k, v) in e.items()}.get("description")
+def weather_data(i):
+    state = {k: v for e in json.loads(FORECAST.content)["daily"][i]["weather"] for (k, v) in e.items()}.get("main")
+    desc = {k: v for e in json.loads(FORECAST.content)["daily"][i]["weather"] for (k, v) in e.items()}.get("description")
     return {'status': state, 'description': desc}

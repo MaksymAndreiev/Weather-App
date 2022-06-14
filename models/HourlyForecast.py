@@ -4,7 +4,7 @@ from models.base import Model
 
 class HourlyForecast(Model, db.Model):
     __tablename__ = 'hourly_forecast'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
     city_id = db.Column(db.Integer, db.ForeignKey('city.id'), nullable=False)
     weather_status_id = db.Column(db.Integer, db.ForeignKey('weather_status.id'), nullable=False)
     temperature = db.Column(db.Integer, nullable=False)

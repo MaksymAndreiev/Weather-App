@@ -4,7 +4,7 @@ from models.base import Model
 
 class DailyForecast(Model, db.Model):
     __tablename__ = 'daily_forecast'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True, nullable=False)
     city_id = db.Column(db.Integer, db.ForeignKey('city.id'), nullable=False)
     day_id = db.Column(db.Integer, nullable=False)
     day_name = db.Column(db.String(3), nullable=False)

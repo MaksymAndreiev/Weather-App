@@ -19,7 +19,7 @@ def get_all_cities():
 
 def add_city():
     city_name = request.form.get('city_name')
-    response = requests.get(f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key[0]}')
+    response = requests.get(f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}')
     if response.status_code == 404:
         flash("The city doesn't exist!")
         return redirect('/')

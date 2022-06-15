@@ -28,14 +28,8 @@ def get_data(city_name):
     """
 
     """
-    try:
-        data = requests.get(
-            f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key[0]}&units=metric')
-        data.raise_for_status()  # returns an HTTPError object if an error has occurred
-    except ConnectionError:
-        data = requests.get(
-            f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key[1]}&units=metric')
-
+    data = requests.get(
+        f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}&units=metric')
     global DATA
     DATA = data
 
@@ -45,15 +39,9 @@ def get_forecast_data(city_name):
     city = City.query.filter_by(name=city_name).first()
     lat = city.latitude
     lon = city.longitude
-    try:
-        data_forecast = requests.get(
-            f'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,hourly,'
-            f'alerts&appid={api_key[0]}&units=metric')
-        data_forecast.raise_for_status()  # returns an HTTPError object if an error has occurred
-    except ConnectionError:
-        data_forecast = requests.get(
-            f'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,hourly,'
-            f'alerts&appid={api_key[1]}&units=metric')
+    data_forecast = requests.get(
+        f'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,hourly,'
+        f'alerts&appid={api_key}&units=metric')
     FORECAST = data_forecast
 
 

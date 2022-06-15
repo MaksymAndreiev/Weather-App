@@ -11,3 +11,5 @@ class City(Model, db.Model):
     country_id = db.Column(db.Integer, db.ForeignKey('country.id'), nullable=False)
     hours = db.relationship('HourlyForecast', backref='city', lazy='dynamic', cascade='all, delete')
     days = db.relationship('DailyForecast', backref='city', lazy='dynamic', cascade='all, delete')
+    #users = db.relationship('UsersCity', backref='city', lazy='dynamic', cascade='all, delete')
+

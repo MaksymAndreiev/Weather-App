@@ -8,3 +8,4 @@ class Country(Model, db.Model):
     name = db.Column(db.String(200), unique=True, nullable=False)
     # добавить полное имя страны
     cities = db.relationship('City', backref='country', lazy='dynamic', cascade='all, delete')
+    # users = db.relationship('Users', bakcref='country', lazy='dynamic', cascade='all, delete')

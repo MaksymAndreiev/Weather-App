@@ -30,7 +30,16 @@ class Model(object):
         conn = psycopg2.connect(user="root", password="root", host="localhost", port="5432",
                                 dbname="weather_app")
         cur = conn.cursor()
-        
+
+        class_name = cls.__name__
+        class_name = re.sub(r"([A-Z])", r" \1", class_name).split()
+        if len(class_name) != 1:
+            class_name.insert(1, '_')
+        class_name = ''.join(class_name)
+        class_name = class_name.lower()
+        table = class_name
+        print(table)
+
         columns = kwargs.keys()
         values = [kwargs[column] for column in columns]
         insert_statement = 'insert into {} (%s) values %s'.format(table)

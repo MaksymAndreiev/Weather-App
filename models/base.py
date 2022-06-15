@@ -1,3 +1,4 @@
+import re
 import psycopg2
 from psycopg2._psycopg import AsIs
 

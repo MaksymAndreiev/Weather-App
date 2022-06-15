@@ -1,3 +1,4 @@
+import psycopg2
 from core import db
 
 
@@ -20,7 +21,15 @@ class Model(object):
         cls: class
         kwargs: dict with object parameters
         """
-        obj = cls(**kwargs)
+        conn = psycopg2.connect("dbname=weather_app user=root")
+        cur = conn.cursor()
+        
+        columns = kwargs.keys()
+        values = [kwargs[column] for column in columns]
+        
+        insert_statement = 'insert into weather_app (%s) values %s'
+        obj = cur.mogrify(insert_statement, (AsIs(','.join(columns)), tuple(values)))
+        
         return commit(obj)
 
     @classmethod

@@ -11,8 +11,6 @@ def create_app():
     app = Flask(__name__, template_folder='../templates', static_folder='../static')
     app.config['SQLALCHEMY_DATABASE_URI'] = DB_URL
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False  # silence the deprecation warning
-    app.config['EXPLAIN_TEMPLATE_LOADING'] = True
-    app.config['PROPAGATE_EXCEPTIONS'] = True
     app.secret_key = 'secret_key'
 
     db.init_app(app)

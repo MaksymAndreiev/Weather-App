@@ -128,5 +128,5 @@ def weather_data(i):
     else:
         state = {k: v for e in json.loads(FORECAST.content)["daily"][i]["weather"] for (k, v) in e.items()}.get("main")
         desc = {k: v for e in json.loads(FORECAST.content)["daily"][i]["weather"] for (k, v) in e.items()}.get(
-        "description")
+            "description")
     return {'status': state, 'description': desc}

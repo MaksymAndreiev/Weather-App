@@ -1,15 +1,22 @@
 import psycopg2
+from psycopg2._psycopg import AsIs
+from sqlalchemy import DDL, event
+
 from core import db
 
 
-def commit(obj):
+def commit(obj, conn, cur):
     """
     Function for convenient commit
     """
-    db.session.add(obj)
-    db.session.commit()
-    db.session.refresh(obj)
-    return obj
+    # db.session.add(obj)
+    # db.session.commit()
+    # db.session.refresh(obj)
+    cur.execute(obj)
+    conn.commit()
+    cur.close()
+    conn.close()
+    # return obj
 
 
 class Model(object):
@@ -21,16 +28,16 @@ class Model(object):
         cls: class
         kwargs: dict with object parameters
         """
-        conn = psycopg2.connect("dbname=weather_app user=root")
+        conn = psycopg2.connect(user="root", password="root", host="localhost", port="5432",
+                                dbname="weather_app")
         cur = conn.cursor()
         
         columns = kwargs.keys()
         values = [kwargs[column] for column in columns]
-        
-        insert_statement = 'insert into weather_app (%s) values %s'
+        insert_statement = f'insert into {table}(%s) values %s'
         obj = cur.mogrify(insert_statement, (AsIs(','.join(columns)), tuple(values)))
-        
-        return commit(obj)
+
+        return commit(obj, conn, cur)
 
     @classmethod
     def update(cls, row_id, **kwargs):
@@ -41,11 +48,15 @@ class Model(object):
         row_id: record id
         kwargs: dict with object parameters
         """
+        conn = psycopg2.connect(user="root", password="root", host="127.0.0.1", port="5432",
+                                dbname="weather_app")
+        cur = conn.cursor()
+
         obj = cls.query.filter_by(id=row_id).first()
         keys = kwargs.keys()
         for key in keys:
             exec("obj.{0} = kwargs['{0}']".format(key))
-        return commit(obj)
+        return commit(obj, conn, cur)
 
     @classmethod
     def delete(cls, row_id):
@@ -65,49 +76,78 @@ class Model(object):
             obj = 0
         return obj
 
-    @classmethod
-    def add_relation(cls, row_id, rel_obj):
-        """
-        Add relation to object
+    # @classmethod
+    # def add_relation(cls, row_id, rel_obj):
+    #     """
+    #     Add relation to object
+    #
+    #     cls: class
+    #     row_id: record id
+    #     rel_obj: related object
+    #     """
+    #     obj = cls.query.filter_by(id=row_id).first()
+    #     if cls.__name__ == 'Actor':
+    #         obj.filmography.append(rel_obj)
+    #     elif cls.__name__ == 'Movie':
+    #         obj.cast.append(rel_obj)
+    #     return commit(obj)
+    #
+    # @classmethod
+    # def remove_relation(cls, row_id, rel_obj):
+    #     """
+    #     Remove certain relation
+    #
+    #     cls: class
+    #     row_id: record id
+    #     rel_obj: related object
+    #     """
+    #     obj = cls.query.filter_by(id=row_id).first()
+    #     if cls.__name__ == 'Actor':
+    #         obj.filmography.remove(rel_obj)
+    #     elif cls.__name__ == 'Movie':
+    #         obj.cast.remove(rel_obj)
+    #     return commit(obj)
+    #
+    # @classmethod
+    # def clear_relations(cls, row_id):
+    #     """
+    #     Remove all relations by id
+    #
+    #     cls: class
+    #     row_id: record id
+    #     """
+    #     obj = cls.query.filter_by(id=row_id).first()
+    #     if cls.__name__ == 'Actor':
+    #         obj.filmography = []
+    #     elif cls.__name__ == 'Movie':
+    #         obj.cast = []
+    #     return commit(obj)
 
-        cls: class
-        row_id: record id
-        rel_obj: related object
-        """
-        obj = cls.query.filter_by(id=row_id).first()
-        if cls.__name__ == 'Actor':
-            obj.filmography.append(rel_obj)
-        elif cls.__name__ == 'Movie':
-            obj.cast.append(rel_obj)
-        return commit(obj)
-
-    @classmethod
-    def remove_relation(cls, row_id, rel_obj):
-        """
-        Remove certain relation
-
-        cls: class
-        row_id: record id
-        rel_obj: related object
-        """
-        obj = cls.query.filter_by(id=row_id).first()
-        if cls.__name__ == 'Actor':
-            obj.filmography.remove(rel_obj)
-        elif cls.__name__ == 'Movie':
-            obj.cast.remove(rel_obj)
-        return commit(obj)
-
-    @classmethod
-    def clear_relations(cls, row_id):
-        """
-        Remove all relations by id
-
-        cls: class
-        row_id: record id
-        """
-        obj = cls.query.filter_by(id=row_id).first()
-        if cls.__name__ == 'Actor':
-            obj.filmography = []
-        elif cls.__name__ == 'Movie':
-            obj.cast = []
-        return commit(obj)
+# def before_insert():
+#     pass
+#
+# func = DDL(
+#     "CREATE FUNCTION my_func() "
+#     "RETURNS TRIGGER AS $$ "
+#     "BEGIN "
+#     "NEW.name := 'ins'; "
+#     "RETURN NEW; "
+#     "END; $$ LANGUAGE PLPGSQL"
+# )
+#
+# trigger = DDL(
+#     "CREATE TRIGGER dt_ins BEFORE INSERT ON city "
+#     "FOR EACH ROW EXECUTE PROCEDURE my_func();"
+# )
+#
+# event.listen(
+#     City,
+#     'before_insert',
+#     func.execute_if(dialect='postgresql')
+# )
+#
+# event.listen(
+#     City,
+#     'before_insert',
+#     trigger.execute_if(dialect='postgresql')
+# )

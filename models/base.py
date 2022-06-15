@@ -1,6 +1,5 @@
 import psycopg2
 from psycopg2._psycopg import AsIs
-from sqlalchemy import DDL, event
 
 from core import db
 
@@ -34,7 +33,8 @@ class Model(object):
         
         columns = kwargs.keys()
         values = [kwargs[column] for column in columns]
-        insert_statement = f'insert into {table}(%s) values %s'
+        insert_statement = 'insert into {} (%s) values %s'.format(table)
+        print(values)
         obj = cur.mogrify(insert_statement, (AsIs(','.join(columns)), tuple(values)))
 
         return commit(obj, conn, cur)

@@ -28,42 +28,31 @@ def delete(city_id):
 
 @app.route('/')
 def index():
-    # def get_date(timezone):
-    #     tz = datetime.timezone(datetime.timedelta(seconds=int(timezone)))
-    #     day = datetime.datetime.now(tz=tz).date().strftime("%a, %d %b")
-    #     time = datetime.datetime.now(tz=tz).time().strftime("%H:%M")
-    #     hour = datetime.datetime.now(tz=tz).time().hour
-    #     return hour, time, day
-    #
-    # def get_date_name(dt):
-    #     date = datetime.datetime.fromtimestamp(dt)
-    #     day = date.date().strftime("%a")
-    #     return day
+    def get_date(timezone):
+        tz = datetime.timezone(datetime.timedelta(seconds=int(timezone)))
+        day = datetime.datetime.now(tz=tz).date().strftime("%a, %d %b")
+        time = datetime.datetime.now(tz=tz).time().strftime("%H:%M")
+        hour = datetime.datetime.now(tz=tz).time().hour
+        return hour, time, day
+
+    def get_date_name(dt):
+        date = datetime.datetime.fromtimestamp(dt)
+        day = date.date().strftime("%a")
+        return day
 
     weather = []
     cities = get_all_cities()
     for city in cities:
 
-        # try:
-        #     data = requests.get(
-        #         f'https://api.openweathermap.org/data/2.5/weather?q={city.name}&appid={api_key[0]}&units=metric')
-        #     data.raise_for_status()
-        # except ConnectionError:
-        #     data = requests.get(
-        #         f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key[1]}&units=metric')
+        data = requests.get(
+            f'https://api.openweathermap.org/data/2.5/weather?q={city.name}&appid={api_key}&units=metric')
 
-        # lat = json.loads(data.content)["coord"].get("lat")
-        # lon = json.loads(data.content)["coord"].get("lon")
-        #
-        # try:
-        #     data_forecast = requests.get(
-        #         f'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,hourly,'
-        #         f'alerts&appid={api_key[0]}&units=metric')
-        #     data_forecast.raise_for_status()
-        # except ConnectionError:
-        #     data_forecast = requests.get(
-        #         f'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,hourly,'
-        #         f'alerts&appid={api_key[1]}&units=metric')
+        lat = json.loads(data.content)["coord"].get("lat")
+        lon = json.loads(data.content)["coord"].get("lon")
+
+        data_forecast = requests.get(
+            f'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,hourly,'
+            f'alerts&appid={api_key}&units=metric')
 
         # прогноз погоды по дням где ид города = сити.ид_города (поле дневная температура)
         days_weather = list(
@@ -71,8 +60,8 @@ def index():
         # прогноз погоды по дням где ид города = сити.ид_города (поле название дня недели)
         days_names = ['i' for i in range(7)]
         #
-        # for i in range(1, 8):
-        #     days_names[i - 1] = get_date_name(json.loads(data_forecast.content)["daily"][i].get('dt'))
+        for i in range(1, 8):
+            days_names[i - 1] = get_date_name(json.loads(data_forecast.content)["daily"][i].get('dt'))
 
         # прогноз погоды по дням где ид города = сити.ид_города (поля)
         tooltip_info = [

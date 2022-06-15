@@ -5,7 +5,6 @@ from controllers.parse_request import city_data, hourly_data, daily_data, weathe
 from models.City import City
 from models.DailyForecast import DailyForecast
 from models.HourlyForecast import HourlyForecast
-from models.WeatherStatus import WeatherStatus
 from settings.constants import api_key
 
 

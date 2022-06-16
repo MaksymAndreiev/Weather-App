@@ -83,7 +83,7 @@ def hourly_data(city_name):
     date = get_date(json.loads(DATA.content)['timezone'])[2]
     return {'city_id': city_id, 'weather_status_id': w_id, 'temperature': temp, 'wind_speed': wind,
             'pressure': pressure, 'humidity': humidity, 'precipitation': precipitation, 'time': time,
-            'current_time': current_time, 'date': date}
+            'curr_time': current_time, 'date': date}
 
 
 def daily_data(city_name, day_number):

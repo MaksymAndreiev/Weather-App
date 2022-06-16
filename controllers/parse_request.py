@@ -24,6 +24,17 @@ def weather_id_det(state, i):
     return w_id
 
 
+def country_id_det(country_name):
+    country = Country.query.filter_by(name=country_name).first()
+    if country is None:
+        add_country(country_name)
+        country = Country.query.filter_by(name=country_name).first()
+        c_id = country.id
+    else:
+        c_id = country.id
+    return c_id
+
+
 def get_data(city_name):
     """
 
@@ -50,13 +61,7 @@ def city_data(city_name):
     lat = json.loads(DATA.content)["coord"].get("lat")
     lon = json.loads(DATA.content)["coord"].get("lon")
     country_name = json.loads(DATA.content)["sys"].get("country")
-    country = Country.query.filter_by(name=country_name).first()
-    if country is None:
-        add_country(country_name)
-        country = Country.query.filter_by(name=country_name).first()
-        c_id = country.id
-    else:
-        c_id = country.id
+    c_id = country_id_det(country_name)
     return {'name': city_name, 'longitude': lon, 'latitude': lat, 'country_id': c_id}
 
 

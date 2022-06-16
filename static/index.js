@@ -1,7 +1,6 @@
-let clicks = 0;
-
+// $('#input-city').attr("disabled", 'disabled');
 $("#login").click(function () {
-
+    $('#input-city').attr("disabled", 'disabled');
     $(this).animate({
         width: "250px",
         height: "250px"
@@ -16,6 +15,7 @@ $("#login").click(function () {
 });
 
 $('#enter').click(function () {
+    $("#input-city").attr("disabled", false);
     $("#login").animate({
         width: "50px",
         height: "50px"

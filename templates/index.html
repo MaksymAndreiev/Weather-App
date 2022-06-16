@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="60">
+    <meta http-equiv="refresh" content="3600">
     <title>Weather App</title>
     <link rel="shortcut icon" href="{{ url_for('static', filename='img/weather-app.png') }}" type="image/x-icon"/>
     <link rel="stylesheet"
@@ -12,6 +12,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/charts.css/dist/charts.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://kit.fontawesome.com/c4aebab872.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body oncontextmenu="return false">
 <div class="form">
@@ -22,10 +24,28 @@
             </div>
         {% endif %}
     {% endwith %}
-    <form action="/add" method="POST">
+    <form action="/add" method="POST" id="#input-form">
         <input type="text" placeholder="Enter a city name" name="city_name" id="input-city">
         <button type="submit" class="submit-button">Add</button>
     </form>
+</div>
+<div class="circle1" id="login">
+    <p><i class="fas fa-user"></i></p>
+    <div id="field">
+        <form action="/reg" method="POST">
+            <input type="text" placeholder="Login" id="log" name="login">
+            <input type="password" placeholder="Password" id="password" name="password">
+            {% if counties is defined %}
+                <select class="dropdown" name="country">
+                    {% for country in counties %}
+                        <option value="{{ country[0] }}">{{ country[1] }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+            <button type="submit" id="enter">Login</button>
+        </form>
+    </div>
+    <script src="/static/index.js"></script>
 </div>
 <div class="cards">
     {% if weather is defined %}

@@ -44,7 +44,6 @@ class Model(object):
         values = [kwargs[column] for column in columns]
         insert_statement = f'insert into {table}(%s) values %s'
         obj = cur.mogrify(insert_statement, (AsIs(','.join(columns)), tuple(values)))
-
         return commit(obj, conn, cur)
 
     @classmethod

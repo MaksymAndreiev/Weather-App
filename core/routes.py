@@ -1,14 +1,17 @@
 import json
 
 import requests
-from flask import render_template
+from flask import render_template, request
 from flask import current_app as app
 import datetime
 
 from controllers.city import add_city as add, get_all_cities
 from controllers.city import delete as del_
 from controllers.parse_request import hourly_data, daily_data
+from controllers.users import add_user
+from models.MeasuringUnits import MeasuringUnits
 from settings.constants import api_key
+from settings.CountriesList import countries_codes
 
 
 @app.template_filter('positive')
@@ -26,6 +29,11 @@ def delete(city_id):
     return del_(city_id)
 
 
+@app.route('/reg', methods=['GET', 'POST'])
+def registration():
+    return add_user()
+
+
 @app.route('/')
 def index():
     def get_date(timezone):
@@ -35,17 +43,19 @@ def index():
         hour = datetime.datetime.now(tz=tz).time().hour
         return hour, time, day
 
-    def get_date_name(dt):
-        date = datetime.datetime.fromtimestamp(dt)
-        day = date.date().strftime("%a")
-        return day
-
+    if len(MeasuringUnits.query.all()) == 0:
+        MeasuringUnits.create(**{'unit_name': 'standard', 'unit_description': 'Kelvin'})
+        MeasuringUnits.create(**{'unit_name': 'metric', 'unit_description': 'Celsius'})
+        MeasuringUnits.create(**{'unit_name': 'imperial', 'unit_description': 'Fahrenheit'})
     weather = []
     cities = get_all_cities()
     for city in cities:
 
+        # cur.execute(f"SELECT name FROM city WHERE id = {city[0]}")
+        city_id = city[0]
+        city_name = city[1]
         data = requests.get(
-            f'https://api.openweathermap.org/data/2.5/weather?q={city.name}&appid={api_key}&units=metric')
+            f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}&units=metric')
 
         lat = json.loads(data.content)["coord"].get("lat")
         lon = json.loads(data.content)["coord"].get("lon")
@@ -87,7 +97,12 @@ def index():
             "days": days_weather,
             "names": days_names,
             "tooltip": tooltip_info,
-            "id": f"{city.id}",
+            "id": f"{city_id}",
         }
         weather.append(dict_with_weather_info)
-    return render_template('index.html', weather=weather)
+
+        if conn:
+            cur.close()
+            conn.close()
+
+    return render_template('index.html', weather=weather, counties=countries_codes.items())

@@ -35,29 +35,30 @@ def country_id_det(country_name):
     return c_id
 
 
-def get_data(city_name):
+def get_data(city_name, units):
     """
 
     """
     data = requests.get(
-        f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}&units=metric')
+        f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}&units={units}')
     global DATA
     DATA = data
 
 
-def get_forecast_data(city_name):
+def get_forecast_data(city_name, units):
+    print(units)
     global FORECAST
     city = City.query.filter_by(name=city_name).first()
     lat = city.latitude
     lon = city.longitude
     data_forecast = requests.get(
         f'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude=current,minutely,hourly,'
-        f'alerts&appid={api_key}&units=metric')
+        f'alerts&appid={api_key}&units={units}')
     FORECAST = data_forecast
 
 
-def city_data(city_name):
-    get_data(city_name)
+def city_data(city_name, units):
+    get_data(city_name, units)
     lat = json.loads(DATA.content)["coord"].get("lat")
     lon = json.loads(DATA.content)["coord"].get("lon")
     country_name = json.loads(DATA.content)["sys"].get("country")
@@ -65,7 +66,7 @@ def city_data(city_name):
     return {'name': city_name, 'longitude': lon, 'latitude': lat, 'country_id': c_id}
 
 
-def hourly_data(city_name):
+def hourly_data(city_name, units):
     def get_date(timezone):
         tz = datetime.timezone(datetime.timedelta(seconds=int(timezone)))
         day = datetime.datetime.now(tz=tz).date()
@@ -73,7 +74,7 @@ def hourly_data(city_name):
         hour = datetime.datetime.now(tz=tz).time().hour
         return hour, time, day
 
-    get_forecast_data(city_name)
+    get_forecast_data(city_name, units)
     city = City.query.filter_by(name=city_name).first()
     city_id = city.id
     state = {k: v for e in json.loads(DATA.content)["weather"] for (k, v) in e.items()}.get("main")

@@ -16,8 +16,3 @@ def add_country(country_name):
             pass
     else:
         Country.create(name=country_name)
-
-
-# def delete(country_id):
-#     City.delete(country_id)
-#     return redirect('/')

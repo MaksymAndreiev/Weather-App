@@ -81,7 +81,6 @@ class Model(object):
         class_name = class_name.lower()
         table = class_name
 
-        # нужно как-то выделить id из cls
         q = f"DELETE FROM {table} WHERE id = {row_id}"
         cur.execute(q)
         conn.commit()

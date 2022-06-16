@@ -23,7 +23,6 @@ def add_user():
 
 
 def user_preferences(user_id):
-    # get user country id
     conn = psycopg2.connect(user="root", password="root", host="localhost", port="5432",
                             dbname="weather_app")
     cur = conn.cursor()

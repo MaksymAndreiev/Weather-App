@@ -1,7 +1,7 @@
 import json
 
-import requests
-from flask import render_template, request
+import psycopg2
+from flask import render_template
 from flask import current_app as app
 
 from controllers.city import add_city as add, get_all_cities
@@ -25,12 +25,18 @@ def delete(city_id):
 
 @app.route('/')
 def index():
+    conn = psycopg2.connect(user="root", password="root", host="127.0.0.1", port="5432",
+                            dbname="weather_app")
+    cur = conn.cursor()
     weather = []
     cities = get_all_cities()
     for city in cities:
 
         city_id = city[0]
         city_name = city[1]
+
+        cur.execute(f"SELECT units FROM hourly_forecast WHERE city_id = {city_id}")
+        units = cur.fetchone()[0]
 
         cur.execute(f"SELECT day_temperature FROM daily_forecast WHERE city_id = {city_id}")
         days_weather = [int(r[0]) for r in cur.fetchall()]
@@ -44,15 +50,20 @@ def index():
         cur.execute(f"SELECT night_temperature FROM daily_forecast WHERE city_id = {city_id}")
         n_temp = [int(r[0]) for r in cur.fetchall()]
 
+        cur.execute(f"SELECT feels_like_day FROM daily_forecast WHERE city_id = {city_id}")
+        fd_temp = [int(r[0]) for r in cur.fetchall()]
+
+        cur.execute(f"SELECT feels_like_night FROM daily_forecast WHERE city_id = {city_id}")
+        fn_temp = [int(r[0]) for r in cur.fetchall()]
+
         # прогноз погоды по дням где ид города = сити.ид_города (поля)
         tooltip_info = [
-            list(int(json.loads(data_forecast.content)["daily"][i].get("temp").get("day")) for i in range(1, 8)),
-            list(int(json.loads(data_forecast.content)["daily"][i].get("temp").get("night")) for i in range(1, 8)),
-            list(int(json.loads(data_forecast.content)["daily"][i].get("feels_like").get("day")) for i in range(1, 8)),
-            list(int(json.loads(data_forecast.content)["daily"][i].get("feels_like").get("night")) for i in range(1, 8))
+            d_temp,
+            n_temp,
+            fd_temp,
+            fn_temp
         ]
 
-        #
         dict_with_weather_info = {
             "name": city_name,
             "state": w_state,

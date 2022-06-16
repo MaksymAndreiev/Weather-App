@@ -1,6 +1,8 @@
 import re
+
 import psycopg2
 from psycopg2._psycopg import AsIs
+
 
 def commit(obj, conn, cur):
     """
@@ -67,12 +69,21 @@ class Model(object):
         row_id: record id
         return: int (1 if deleted else 0)
         """
-        obj = db.session.query(cls).filter(cls.id == row_id).first()
-        db.session.delete(obj)
-        db.session.commit()
-        if db.session.query(cls).filter(cls.id == row_id).first() is None:
-            obj = 1
-        else:
-            obj = 0
-        return obj
+        conn = psycopg2.connect(user="root", password="root", host="127.0.0.1", port="5432",
+                                dbname="weather_app")
+        cur = conn.cursor()
 
+        class_name = cls.__name__
+        class_name = re.sub(r"([A-Z])", r" \1", class_name).split()
+        if len(class_name) != 1:
+            class_name.insert(1, '_')
+        class_name = ''.join(class_name)
+        class_name = class_name.lower()
+        table = class_name
+
+        # нужно как-то выделить id из cls
+        q = f"DELETE FROM {table} WHERE id = {row_id}"
+        cur.execute(q)
+        conn.commit()
+        cur.close()
+        conn.close()

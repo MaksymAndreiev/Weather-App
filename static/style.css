@@ -366,24 +366,21 @@ select {
 }
 
 .dropdown {
+    float: right;
     padding-top: -50px;
-    margin-left: 30px;
+    margin-right: 50px;
     margin-bottom: 10px;
-    background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, .25) 0%, rgba(255, 255, 255, 0) 100%);
-    background-image: linear-gradient(to bottom, rgba(255, 255, 255, .25) 0%, rgba(255, 255, 255, 0) 100%);
-    background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#40FFFFFF", endColorstr="#00FFFFFF", GradientType=0);
-    background-color: #f6f6f6;
-    border-radius: 6px;
+    /*background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, .25) 0%, rgba(255, 255, 255, 0) 100%);*/
+    /*background-image: linear-gradient(to bottom, rgba(255, 255, 255, .25) 0%, rgba(255, 255, 255, 0) 100%);*/
+    /*background-repeat: repeat-x;*/
+    /*filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#40FFFFFF", endColorstr="#00FFFFFF", GradientType=0);*/
     border: solid 1px #eee;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.0075);
     box-sizing: border-box;
     cursor: pointer;
     display: block;
-    float: left;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: normal;
-    height: 20px;
+    height: 40px;
     line-height: 20px;
     outline: none;
     position: relative;
@@ -391,7 +388,11 @@ select {
     transition: all 0.2s ease-in-out;
     user-select: none;
     white-space: nowrap;
-    width: 190px;
+    width: auto;
+    border-radius: 10px;
+    background: #e0e0e0;
+    box-shadow: 12px 12px 23px #bebebe,
+    -6px -6px 8px #ffffff;
 }
 
 .dropdown:focus {
@@ -414,7 +415,6 @@ select {
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
     border-top: 4px solid #777;
-    /*transform: origin(50% 20%);*/
     transition: all 0.125s ease-in-out;
     content: '';
     display: block;
@@ -465,6 +465,10 @@ select {
     top: 100%;
     left: 0;
     z-index: 999;
+    border-radius: 50px;
+    background: #e0e0e0;
+    box-shadow: 20px 20px 60px #bebebe,
+    -20px -20px 60px #ffffff;
 }
 
 .dropdown .list:hover .option:not(:hover) {
@@ -480,10 +484,17 @@ select {
     padding-right: 29px;
     text-align: left;
     transition: all 0.2s;
+    border-radius: 15px;
+background: linear-gradient(145deg, #f0f0f0, #cacaca);
+box-shadow:  10px 10px 25px #cecece,
+             -10px -10px 25px #f2f2f2;
 }
 
 .dropdown .option:hover, .dropdown .option:focus {
-    background-color: #f6f6f6 !important;
+        border-radius: 15px;
+background: linear-gradient(145deg, #cacaca, #f0f0f0);
+box-shadow:  10px 10px 25px #cecece,
+             -10px -10px 25px #f2f2f2;
 }
 
 .dropdown .option.selected {
@@ -491,5 +502,8 @@ select {
 }
 
 .dropdown .option.selected:focus {
-    background: #f6f6f6;
+    border-radius: 15px;
+background: linear-gradient(145deg, #cacaca, #f0f0f0);
+box-shadow:  10px 10px 25px #cecece,
+             -10px -10px 25px #f2f2f2;
 }

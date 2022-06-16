@@ -16,6 +16,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 </head>
 <body oncontextmenu="return false">
+<div>
+    <form>
+        <select class="dropdown" name="units">
+            <option value="metric"> Celsius </option>
+            <option value="imperial"> Fahrenheit </option>
+            <option value="standard"> Kelvin </option>
+        </select>
+    </form>
+</div>
 <div class="form">
     {% with message = get_flashed_messages() %}
         {% if message %}
@@ -29,24 +38,24 @@
         <button type="submit" class="submit-button">Add</button>
     </form>
 </div>
-<div class="circle1" id="login">
-    <p><i class="fas fa-user"></i></p>
-    <div id="field">
-        <form action="/reg" method="POST">
-            <input type="text" placeholder="Login" id="log" name="login">
-            <input type="password" placeholder="Password" id="password" name="password">
-            {% if counties is defined %}
-                <select class="dropdown" name="country">
-                    {% for country in counties %}
-                        <option value="{{ country[0] }}">{{ country[1] }}</option>
-                    {% endfor %}
-                </select>
-            {% endif %}
-            <button type="submit" id="enter">Login</button>
-        </form>
-    </div>
-    <script src="/static/index.js"></script>
-</div>
+{#<div class="circle1" id="login">#}
+{#    <p><i class="fas fa-user"></i></p>#}
+{#    <div id="field">#}
+{#        <form action="/reg" method="POST">#}
+{#            <input type="text" placeholder="Login" id="log" name="login">#}
+{#            <input type="password" placeholder="Password" id="password" name="password">#}
+{#            {% if counties is defined %}#}
+{#                <select class="dropdown" name="country">#}
+{#                    {% for country in counties %}#}
+{#                        <option value="{{ country[0] }}">{{ country[1] }}</option>#}
+{#                    {% endfor %}#}
+{#                </select>#}
+{#            {% endif %}#}
+{#            <button type="submit" id="enter">Login</button>#}
+{#        </form>#}
+{#    </div>#}
+{#    <script src="/static/index.js"></script>#}
+{#</div>#}
 <div class="cards">
     {% if weather is defined %}
         {% for city in weather %}

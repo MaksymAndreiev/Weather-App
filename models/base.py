@@ -2,7 +2,6 @@ import re
 import psycopg2
 from psycopg2._psycopg import AsIs
 
-
 def commit(obj, conn, cur):
     """
     Function for convenient commit

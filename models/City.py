@@ -10,6 +10,5 @@ class City(Model, db.Model):
     latitude = db.Column(db.Float(decimal_return_scale=2), unique=True, nullable=False)
     country_id = db.Column(db.Integer, db.ForeignKey('country.id', ondelete='CASCADE'), nullable=False)
     hours = db.relationship('HourlyForecast', backref='city', lazy='dynamic', cascade='all, delete')
-    days = db.relationship('DailyForecast', backref='city', lazy='dynamic', cascade='all, delete')
-    #users = db.relationship('UsersCity', backref='city', lazy='dynamic', cascade='all, delete')
+    days = db.relationship('DailyForecast', backref='city', lazy='dynamic', cascade='all, delete-orphan')
 

@@ -2,21 +2,15 @@ import re
 import psycopg2
 from psycopg2._psycopg import AsIs
 
-from core import db
-
 
 def commit(obj, conn, cur):
     """
     Function for convenient commit
     """
-    # db.session.add(obj)
-    # db.session.commit()
-    # db.session.refresh(obj)
     cur.execute(obj)
     conn.commit()
     cur.close()
     conn.close()
-    # return obj
 
 
 class Model(object):
@@ -83,78 +77,3 @@ class Model(object):
             obj = 0
         return obj
 
-    # @classmethod
-    # def add_relation(cls, row_id, rel_obj):
-    #     """
-    #     Add relation to object
-    #
-    #     cls: class
-    #     row_id: record id
-    #     rel_obj: related object
-    #     """
-    #     obj = cls.query.filter_by(id=row_id).first()
-    #     if cls.__name__ == 'Actor':
-    #         obj.filmography.append(rel_obj)
-    #     elif cls.__name__ == 'Movie':
-    #         obj.cast.append(rel_obj)
-    #     return commit(obj)
-    #
-    # @classmethod
-    # def remove_relation(cls, row_id, rel_obj):
-    #     """
-    #     Remove certain relation
-    #
-    #     cls: class
-    #     row_id: record id
-    #     rel_obj: related object
-    #     """
-    #     obj = cls.query.filter_by(id=row_id).first()
-    #     if cls.__name__ == 'Actor':
-    #         obj.filmography.remove(rel_obj)
-    #     elif cls.__name__ == 'Movie':
-    #         obj.cast.remove(rel_obj)
-    #     return commit(obj)
-    #
-    # @classmethod
-    # def clear_relations(cls, row_id):
-    #     """
-    #     Remove all relations by id
-    #
-    #     cls: class
-    #     row_id: record id
-    #     """
-    #     obj = cls.query.filter_by(id=row_id).first()
-    #     if cls.__name__ == 'Actor':
-    #         obj.filmography = []
-    #     elif cls.__name__ == 'Movie':
-    #         obj.cast = []
-    #     return commit(obj)
-
-# def before_insert():
-#     pass
-#
-# func = DDL(
-#     "CREATE FUNCTION my_func() "
-#     "RETURNS TRIGGER AS $$ "
-#     "BEGIN "
-#     "NEW.name := 'ins'; "
-#     "RETURN NEW; "
-#     "END; $$ LANGUAGE PLPGSQL"
-# )
-#
-# trigger = DDL(
-#     "CREATE TRIGGER dt_ins BEFORE INSERT ON city "
-#     "FOR EACH ROW EXECUTE PROCEDURE my_func();"
-# )
-#
-# event.listen(
-#     City,
-#     'before_insert',
-#     func.execute_if(dialect='postgresql')
-# )
-#
-# event.listen(
-#     City,
-#     'before_insert',
-#     trigger.execute_if(dialect='postgresql')
-# )

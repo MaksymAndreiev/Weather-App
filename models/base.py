@@ -39,12 +39,10 @@ class Model(object):
         class_name = ''.join(class_name)
         class_name = class_name.lower()
         table = class_name
-        print(table)
 
         columns = kwargs.keys()
         values = [kwargs[column] for column in columns]
-        insert_statement = 'insert into {} (%s) values %s'.format(table)
-        print(values)
+        insert_statement = f'insert into {table}(%s) values %s'
         obj = cur.mogrify(insert_statement, (AsIs(','.join(columns)), tuple(values)))
 
         return commit(obj, conn, cur)

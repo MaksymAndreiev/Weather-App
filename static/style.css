@@ -405,8 +405,6 @@ select {
 
 .dropdown:active, .dropdown.open {
     background-color: #f0f0f0 !important;
-    border-color: #e4e4e4;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, .05) inset;
 }
 
 .dropdown:after {
@@ -453,9 +451,6 @@ select {
     transition: all 0.15s cubic-bezier(0.25, 0, 0.25, 1.75), opacity 0.1s linear;
     transform: scale(0.75);
     transform-origin: 50% 0;
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, .09);
-    background-color: #fff;
-    border-radius: 6px;
     margin-top: 4px;
     padding: 3px 0;
     opacity: 0;
@@ -465,10 +460,6 @@ select {
     top: 100%;
     left: 0;
     z-index: 999;
-    border-radius: 50px;
-    background: #e0e0e0;
-    box-shadow: 20px 20px 60px #bebebe,
-    -20px -20px 60px #ffffff;
 }
 
 .dropdown .list:hover .option:not(:hover) {
@@ -485,16 +476,10 @@ select {
     text-align: left;
     transition: all 0.2s;
     border-radius: 15px;
-background: linear-gradient(145deg, #f0f0f0, #cacaca);
-box-shadow:  10px 10px 25px #cecece,
-             -10px -10px 25px #f2f2f2;
 }
 
 .dropdown .option:hover, .dropdown .option:focus {
         border-radius: 15px;
-background: linear-gradient(145deg, #cacaca, #f0f0f0);
-box-shadow:  10px 10px 25px #cecece,
-             -10px -10px 25px #f2f2f2;
 }
 
 .dropdown .option.selected {
@@ -503,7 +488,4 @@ box-shadow:  10px 10px 25px #cecece,
 
 .dropdown .option.selected:focus {
     border-radius: 15px;
-background: linear-gradient(145deg, #cacaca, #f0f0f0);
-box-shadow:  10px 10px 25px #cecece,
-             -10px -10px 25px #f2f2f2;
 }

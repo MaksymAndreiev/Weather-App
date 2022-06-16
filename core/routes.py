@@ -3,12 +3,9 @@ import json
 import requests
 from flask import render_template, request
 from flask import current_app as app
-import datetime
 
 from controllers.city import add_city as add, get_all_cities
 from controllers.city import delete as del_
-from models.MeasuringUnits import MeasuringUnits
-from settings.constants import api_key
 
 
 @app.template_filter('positive')
@@ -28,10 +25,6 @@ def delete(city_id):
 
 @app.route('/')
 def index():
-    # if len(MeasuringUnits.query.all()) == 0:
-    #     MeasuringUnits.create(**{'unit_name': 'standard', 'unit_description': 'Kelvin'})
-    #     MeasuringUnits.create(**{'unit_name': 'metric', 'unit_description': 'Celsius'})
-    #     MeasuringUnits.create(**{'unit_name': 'imperial', 'unit_description': 'Fahrenheit'})
     weather = []
     cities = get_all_cities()
     for city in cities:
@@ -76,6 +69,7 @@ def index():
             "names": days_names,
             "tooltip": tooltip_info,
             "id": f"{city_id}",
+            "units": units
         }
         weather.append(dict_with_weather_info)
 

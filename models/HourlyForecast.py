@@ -15,3 +15,4 @@ class HourlyForecast(Model, db.Model):
     time = db.Column(db.Integer, nullable=False)
     curr_time = db.Column(db.Time, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
+    units = db.Column(db.String(10), nullable=False)

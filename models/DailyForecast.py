@@ -14,3 +14,4 @@ class DailyForecast(Model, db.Model):
     feels_like_day = db.Column(db.Integer, nullable=False)
     feels_like_night = db.Column(db.Integer,  nullable=False)
     precipitation = db.Column(db.Integer, nullable=False)
+    units = db.Column(db.String(10), nullable=False)

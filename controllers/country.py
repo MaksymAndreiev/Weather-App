@@ -1,3 +1,4 @@
+import psycopg2
 from models.Country import Country
 
 
@@ -5,7 +6,12 @@ def get_all_countries():
     """
     Get list of all records
     """
-    all_countries = Country.query.all()
+    conn = psycopg2.connect(user="root", password="root", host="127.0.0.1", port="5432",
+                            dbname="weather_app")
+    cur = conn.cursor()
+    cur.execute(f"SELECT * FROM county")
+    all_countries = [r[0] for r in cur.fetchall()]
+    # all_countries = Country.query.all()
     return all_countries
 
 

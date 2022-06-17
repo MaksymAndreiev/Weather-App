@@ -10,6 +10,11 @@ def get_all_countries():
 
 
 def add_country(country_name):
+    """
+    Adds a non-duplicate country
+
+    :param country_name: country name
+    """
     countries = get_all_countries()
     for country in countries:
         if country.name == country_name:

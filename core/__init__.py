@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from settings.constants import DB_URL
 
-db = SQLAlchemy()
+db = SQLAlchemy()  # Database creation
 
 
 def create_app():

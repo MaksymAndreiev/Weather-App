@@ -15,16 +15,32 @@ def positive(arr):
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_city():
+    """
+    Add city
+
+    :return: imported method
+    """
     return add()
 
 
 @app.route('/delete/<city_id>', methods=['GET', 'POST'])
 def delete(city_id):
+    """
+    Delete city by id
+
+    :param city_id: deleted city id
+    :return: imported method
+    """
     return del_(city_id)
 
 
 @app.route('/')
 def index():
+    """
+    Main page
+
+    :return:  HTML in the string rendered by the browser
+    """
     conn = psycopg2.connect(user="root", password="root", host="127.0.0.1", port="5432",
                             dbname="weather_app")
     cur = conn.cursor()

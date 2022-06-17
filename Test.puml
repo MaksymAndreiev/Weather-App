@@ -1,0 +1,12 @@
+@startuml
+skinparam actorStyle awesome
+"Користувач" as user
+"Видалити місто" as (remove)
+"Додати місто" as (add)
+"Дізнатись детальніше" as (more)
+"Переглянути прогноз погоди" as (check)
+user --> (add)
+user --> (remove)
+user --> (check)
+(check) --> (more)
+@enduml

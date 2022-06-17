@@ -1,0 +1,26 @@
+@startuml
+!define LIGHTBLUE
+!includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
+
+skinparam Style strictuml
+skinparam actorStyle awesome
+
+actor Користувач as user
+
+==Додавання міста==
+user -> Web: Додати місто
+Web -> Програма: Перевірка на наявність
+alt Міста нема у базі
+    Програма -> API: Запит
+    API -> Програма: Відповідь
+    Програма -> Web: Додає місто на сайт
+
+else Місто вже є в базі
+    Програма -> Web
+
+end
+==Видалення міста==
+user -> Web: Видалити місто
+Web -> Програма: Виклик метода
+Програма -> Web: Видалення міста
+@enduml

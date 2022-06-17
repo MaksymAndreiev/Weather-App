@@ -13,6 +13,13 @@ global DATA, FORECAST
 
 
 def weather_id_det(state, i):
+    """
+    Detect weather id
+
+    :param state: weather
+    :param i: day index
+    :return: weather id
+    """
     weather = WeatherStatus.query.filter_by(status=state).first()
     if weather is None:
         w_data = weather_data(i)
@@ -25,6 +32,12 @@ def weather_id_det(state, i):
 
 
 def country_id_det(country_name):
+    """
+    Get country id by name
+
+    :param country_name: country name
+    :return: country id
+    """
     country = Country.query.filter_by(name=country_name).first()
     if country is None:
         add_country(country_name)
@@ -37,7 +50,11 @@ def country_id_det(country_name):
 
 def get_data(city_name, units):
     """
+    Requests data by city name
 
+    :param city_name: city name
+    :param units: measuring units
+    :return: city date
     """
     data = requests.get(
         f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}&units={units}')
@@ -46,6 +63,13 @@ def get_data(city_name, units):
 
 
 def get_forecast_data(city_name, units):
+    """
+    Get forecast data by city name
+
+    :param city_name: city name
+    :param units: measuring units
+    :return: forecast data
+    """
     global FORECAST
     city = City.query.filter_by(name=city_name).first()
     lat = city.latitude
@@ -57,6 +81,15 @@ def get_forecast_data(city_name, units):
 
 
 def city_data(city_name, units):
+    """
+    Get date by city name
+
+    :param city_name: city name
+    :param units: measuring units
+    :return: country id, latitude and longitude
+    """
+    print(city_name)
+    print(units)
     get_data(city_name, units)
     lat = json.loads(DATA.content)["coord"].get("lat")
     lon = json.loads(DATA.content)["coord"].get("lon")
@@ -66,7 +99,20 @@ def city_data(city_name, units):
 
 
 def hourly_data(city_name, units):
+    """
+    Get hourly date by city name
+
+    :param city_name: city name
+    :param units: measuring units
+    :return: hourly date dictionary
+    """
     def get_date(timezone):
+        """
+        Gets current time
+
+        :param timezone: time zone
+        :return: current time
+        """
         tz = datetime.timezone(datetime.timedelta(seconds=int(timezone)))
         day = datetime.datetime.now(tz=tz).date()
         time = datetime.datetime.now(tz=tz).time().strftime("%H:%M")
@@ -92,7 +138,22 @@ def hourly_data(city_name, units):
 
 
 def daily_data(city_name, day_number, units):
+    """
+    Get daily date
+
+    :param city_name: city name
+    :param day_number: day number
+    :param units: measuring units
+    :return: daily date dictionary
+    """
+
     def get_date_name(dt):
+        """
+        Gets day of the week
+
+        :param dt: date time
+        :return: day of the week
+        """
         date = datetime.datetime.fromtimestamp(dt)
         day = date.date().strftime("%a")
         return day
@@ -116,6 +177,12 @@ def daily_data(city_name, day_number, units):
 
 
 def weather_data(i):
+    """
+    Get weather date by day index
+
+    :param i: day index
+    :return: weather status, description
+    """
     if i == 0:
         state = {k: v for e in json.loads(DATA.content)["weather"] for (k, v) in e.items()}.get("main")
         desc = {k: v for e in json.loads(DATA.content)["weather"] for (k, v) in e.items()}.get("description")

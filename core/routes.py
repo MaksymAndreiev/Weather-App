@@ -17,8 +17,6 @@ def positive(arr):
 def add_city():
     """
     Add city
-
-    :return: imported method
     """
     return add()
 
@@ -29,7 +27,6 @@ def delete(city_id):
     Delete city by id
 
     :param city_id: deleted city id
-    :return: imported method
     """
     return del_(city_id)
 

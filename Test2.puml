@@ -2,25 +2,26 @@
 !define LIGHTBLUE
 !includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
 
+skinparam SequenceMessageAligment center
 skinparam Style strictuml
 skinparam actorStyle awesome
 
 actor Користувач as user
 
 ==Додавання міста==
-user -> Web: Додати місто
-Web -> Програма: Перевірка на наявність
+user -> "Web-застосунок": Додати місто
+"Web-застосунок" -> "Сервер застосунку": Перевірка на наявність
 alt Міста нема у базі
-    Програма -> API: Запит
-    API -> Програма: Відповідь
-    Програма -> Web: Додає місто на сайт
+    "Сервер застосунку" -> API: Запит
+    API -> "Сервер застосунку": Відповідь
+    "Сервер застосунку" -> "Web-застосунок": Додає місто
 
 else Місто вже є в базі
-    Програма -> Web
+    "Сервер застосунку" -> "Web-застосунок"
 
 end
 ==Видалення міста==
-user -> Web: Видалити місто
-Web -> Програма: Виклик метода
-Програма -> Web: Видалення міста
+user -> "Web-застосунок": Видалити місто
+"Web-застосунок" -> "Сервер застосунку": Виклик метода
+"Сервер застосунку" -> "Web-застосунок": Видалення міста
 @enduml

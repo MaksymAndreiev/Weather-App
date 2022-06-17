@@ -1,7 +1,9 @@
 import json
 import datetime
 
+import psycopg2
 import requests
+from flask import flash, redirect
 
 from controllers.country import add_country
 from models.City import City
@@ -89,6 +91,14 @@ def city_data(city_name, units):
     get_data(city_name, units)
     lat = json.loads(DATA.content)["coord"].get("lat")
     lon = json.loads(DATA.content)["coord"].get("lon")
+    conn = psycopg2.connect(user="root", password="root", host="127.0.0.1", port="5432",
+                            dbname="weather_app")
+    cur = conn.cursor()
+    cur.execute(f"SELECT * FROM city")
+    all_cities = [r for r in cur.fetchall()]
+    for city in all_cities:
+        if city[2] == lon and city[3] == lat:
+            return redirect('/')
     country_name = json.loads(DATA.content)["sys"].get("country")
     c_id = country_id_det(country_name)
     return {'name': city_name, 'longitude': lon, 'latitude': lat, 'country_id': c_id}

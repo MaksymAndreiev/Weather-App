@@ -24,6 +24,9 @@ def get_all_cities():
 def add_city():
     units = request.form.get('units')
     city_name = request.form.get('city_name')
+    if city_name == "":
+        flash("Error! Empty string")
+        return redirect('/')
     response = requests.get(f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}')
     if response.status_code == 404:
         flash("The city doesn't exist!")
@@ -35,6 +38,9 @@ def add_city():
             return redirect('/')
     else:
         data = city_data(city_name, units)
+        if type(data) is not dict:
+            flash("The city has already been added to the list!")
+            return redirect('/')
         City.create(**data)
         h_data = hourly_data(city_name, units)
         HourlyForecast.create(**h_data)

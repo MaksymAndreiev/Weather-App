@@ -1,4 +1,5 @@
 import requests
+import psycopg2
 from flask import request, redirect, flash
 
 from controllers.parse_request import city_data, hourly_data, daily_data, weather_data
@@ -12,7 +13,12 @@ def get_all_cities():
     """
     Get list of all records
     """
-    all_cities = City.query.all()
+    conn = psycopg2.connect(user="root", password="root", host="127.0.0.1", port="5432",
+                            dbname="weather_app")
+    cur = conn.cursor()
+    cur.execute(f"SELECT * FROM city")
+    all_cities = [r[0] for r in cur.fetchall()]
+    # all_cities = City.query.all()
     return all_cities
 
 

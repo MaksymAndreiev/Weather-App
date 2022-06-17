@@ -50,27 +50,27 @@ def index():
 
         city_id = city[0]
         city_name = city[1]
-
+        
         cur.execute(f"SELECT units FROM hourly_forecast WHERE city_id = {city_id}")
         units = cur.fetchone()[0]
 
         cur.execute(f"SELECT day_temperature FROM daily_forecast WHERE city_id = {city_id}")
-        days_weather = [int(r[0]) for r in cur.fetchall()]
+        days_weather = int(cur.fetchone()[0])
 
         cur.execute(f"SELECT day_name FROM daily_forecast WHERE city_id = {city_id}")
-        days_names = [r[0] for r in cur.fetchall()]
+        days_names = cur.fetchone()[0]
 
         cur.execute(f"SELECT day_temperature FROM daily_forecast WHERE city_id = {city_id}")
-        d_temp = [int(r[0]) for r in cur.fetchall()]
+        d_temp = int(cur.fetchone()[0])
 
         cur.execute(f"SELECT night_temperature FROM daily_forecast WHERE city_id = {city_id}")
-        n_temp = [int(r[0]) for r in cur.fetchall()]
+        n_temp = int(cur.fetchone()[0])
 
         cur.execute(f"SELECT feels_like_day FROM daily_forecast WHERE city_id = {city_id}")
-        fd_temp = [int(r[0]) for r in cur.fetchall()]
+        fd_temp = int(cur.fetchone()[0])
 
         cur.execute(f"SELECT feels_like_night FROM daily_forecast WHERE city_id = {city_id}")
-        fn_temp = [int(r[0]) for r in cur.fetchall()]
+        fn_temp = int(cur.fetchone()[0])
 
         # прогноз погоды по дням где ид города = сити.ид_города (поля)
         tooltip_info = [
@@ -79,7 +79,47 @@ def index():
             fd_temp,
             fn_temp
         ]
-
+        
+        cur.execute(f"""
+        SELECT weather_status.status
+        FROM hourly_forecast inner join city on city.id = city_id
+			inner join weather_status on weather_status.id = weather_status_id
+        WHERE city.id = {city_id}
+        """)
+        w_state = cur.fetchone()[0]
+        
+        cur.execute(f"""
+        SELECT weather_status.description
+        FROM hourly_forecast inner join city on city.id = city_id
+			inner join weather_status on weather_status.id = weather_status_id
+        WHERE city.id = {city_id}
+        """)
+        w_desc = cur.fetchone()[0]
+        
+        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        w_temp = int(cur.fetchone()[0])
+        
+        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        w_wind = cur.fetchone()[0]
+        
+        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        w_pressure = cur.fetchone()[0]
+        
+        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        w_humidity = cur.fetchone()[0]
+        
+        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        w_prec = cur.fetchone()[0]
+        
+        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        w_time = int(cur.fetchone()[0])
+        
+        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        w_currtime = cur.fetchone()[0]
+        
+        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        w_date = cur.fetchone()[0]
+        
         dict_with_weather_info = {
             "name": city_name,
             "state": w_state,

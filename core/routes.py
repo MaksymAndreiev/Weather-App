@@ -41,24 +41,25 @@ def index():
 
     :return:  HTML in the string rendered by the browser
     """
-    conn = psycopg2.connect(user="root", password="root", host="127.0.0.1", port="5432",
-                            dbname="weather_app")
-    cur = conn.cursor()
     weather = []
     cities = get_all_cities()
     for city in cities:
 
         city_id = city[0]
         city_name = city[1]
+
+        conn = psycopg2.connect(user="root", password="root", host="127.0.0.1", port="5432",
+                                dbname="weather_app")
+        cur = conn.cursor()
         
         cur.execute(f"SELECT units FROM hourly_forecast WHERE city_id = {city_id}")
         units = cur.fetchone()[0]
 
         cur.execute(f"SELECT day_temperature FROM daily_forecast WHERE city_id = {city_id}")
-        days_weather = int(cur.fetchone()[0])
+        days_weather = [int(r[0]) for r in cur.fetchall()]
 
         cur.execute(f"SELECT day_name FROM daily_forecast WHERE city_id = {city_id}")
-        days_names = cur.fetchone()[0]
+        days_names = [r[0] for r in cur.fetchall()]
 
         cur.execute(f"SELECT day_temperature FROM daily_forecast WHERE city_id = {city_id}")
         d_temp = int(cur.fetchone()[0])
@@ -96,28 +97,28 @@ def index():
         """)
         w_desc = cur.fetchone()[0]
         
-        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        cur.execute(f" SELECT temperature FROM hourly_forecast WHERE city_id = {city_id}")
         w_temp = int(cur.fetchone()[0])
         
-        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        cur.execute(f" SELECT wind_speed FROM hourly_forecast WHERE city_id = {city_id}")
         w_wind = cur.fetchone()[0]
         
-        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        cur.execute(f" SELECT pressure FROM hourly_forecast WHERE city_id = {city_id}")
         w_pressure = cur.fetchone()[0]
         
-        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        cur.execute(f" SELECT humidity FROM hourly_forecast WHERE city_id = {city_id}")
         w_humidity = cur.fetchone()[0]
         
-        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        cur.execute(f" SELECT precipitation FROM hourly_forecast WHERE city_id = {city_id}")
         w_prec = cur.fetchone()[0]
         
-        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        cur.execute(f" SELECT time FROM hourly_forecast WHERE city_id = {city_id}")
         w_time = int(cur.fetchone()[0])
         
-        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+        cur.execute(f" SELECT curr_time FROM hourly_forecast WHERE city_id = {city_id}")
         w_currtime = cur.fetchone()[0]
-        
-        cur.execute(f" SELECT weather_status.description FROM hourly_forecast WHERE city.id = {city_id}")
+
+        cur.execute(f" SELECT date FROM hourly_forecast WHERE city_id = {city_id}")
         w_date = cur.fetchone()[0]
         
         dict_with_weather_info = {

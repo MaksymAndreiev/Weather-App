@@ -88,8 +88,6 @@ def city_data(city_name, units):
     :param units: measuring units
     :return: country id, latitude and longitude
     """
-    print(city_name)
-    print(units)
     get_data(city_name, units)
     lat = json.loads(DATA.content)["coord"].get("lat")
     lon = json.loads(DATA.content)["coord"].get("lon")

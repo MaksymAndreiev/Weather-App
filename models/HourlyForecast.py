@@ -13,6 +13,6 @@ class HourlyForecast(Model, db.Model):
     humidity = db.Column(db.Float(decimal_return_scale=2),  nullable=False)
     precipitation = db.Column(db.Integer, nullable=False)
     time = db.Column(db.Integer, nullable=False)
-    curr_time = db.Column(db.Time, nullable=False)
+    curr_time = db.Column(db.String(5), nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     units = db.Column(db.String(10), nullable=False)

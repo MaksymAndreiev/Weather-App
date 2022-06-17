@@ -17,8 +17,7 @@ def get_all_cities():
                             dbname="weather_app")
     cur = conn.cursor()
     cur.execute(f"SELECT * FROM city")
-    all_cities = [r[0] for r in cur.fetchall()]
-    # all_cities = City.query.all()
+    all_cities = [r for r in cur.fetchall()]
     return all_cities
 
 
